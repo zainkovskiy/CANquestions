@@ -1,0 +1,21 @@
+.question{
+  border-radius: 5px;
+  -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  pointer-events: none;
+  opacity: 0.3;
+  background-color: #fff;
+  &:nth-last-child(-n+2){
+    pointer-events: auto;
+    opacity: 1;
+  }
+  &__header {
+    border-bottom: 1px solid #ccc;
+    padding: 1rem;
+  }
+
+  &__body {
+    padding: 1rem;
+  }
+}
