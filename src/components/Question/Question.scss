@@ -6,6 +6,11 @@
   pointer-events: none;
   opacity: 0.3;
   background-color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+
   &:nth-last-child(-n+2){
     pointer-events: auto;
     opacity: 1;

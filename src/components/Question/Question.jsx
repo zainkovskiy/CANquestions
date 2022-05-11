@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import './Question.scss';
 
 export function Question(props) {
-  const { question, index } = props;
+  const { question, index, setCurrentAnswer } = props;
 
   return (
     <AnimatePresence initial={false}>
@@ -21,11 +21,17 @@ export function Question(props) {
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue=""
-              name={index}
+              name={`index${index}`}
             >
               {
                 question.answers.map((answer, idx) =>
-                  <FormControlLabel key={idx} value={idx} control={<Radio />} label={answer.message} />
+                  <FormControlLabel
+                    key={idx}
+                    value={idx + 1}
+                    control={<Radio />}
+                    label={answer.message}
+                    onChange={() => setCurrentAnswer(question.question.UID, idx + 1, answer)}
+                  />
                 )
               }
             </RadioGroup>

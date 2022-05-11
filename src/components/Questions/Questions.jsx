@@ -18,7 +18,7 @@ const listVariants = {
 }
 
 export function Questions(props) {
-  const { questions } = props;
+  const { questions, currentAnswer, setCurrentAnswer } = props;
   return (
     <div className="questions">
       {
@@ -33,6 +33,7 @@ export function Questions(props) {
             <Question
               question={question}
               index={idx}
+              setCurrentAnswer={setCurrentAnswer}
             />
           </motion.div>
         )
@@ -40,9 +41,11 @@ export function Questions(props) {
       <div className="questions__footer">
         <Button
           variant='contained'
+          disabled={ questions.length <= 1 }
         >назад</Button>
         <Button
           variant='contained'
+          disabled={!currentAnswer}
         >далее</Button>
       </div>
     </div>

@@ -11,8 +11,24 @@ export class App extends Component {
     error: false,
     session: '',
     questions: [],
-    log: []
+    log: [],
+    currentAnswer: ''
   }
+
+  setCurrentAnswer = (questionUID, answerUID, answer) => {
+    this.setState(prevState => ({
+      log: [...prevState.log, {[questionUID]:answerUID}]
+    }))
+    this.setState({currentAnswer: answer});
+    console.log(questionUID);
+    console.log(answerUID);
+    console.log(answer);
+  }
+
+  getNextQuestion = () => {
+
+  }
+
   componentDidMount() {
     this.setState({ session: 1 });
     this.setState(prevState => ({
@@ -53,6 +69,9 @@ export class App extends Component {
                   <div>error</div> :
                 <Questions
                   questions={this.state.questions}
+                  currentAnswer={this.state.currentAnswer}
+                  setCurrentAnswer={this.setCurrentAnswer}
+                  getNextQuestion={this.getNextQuestion}
                 />
               }
             </>
