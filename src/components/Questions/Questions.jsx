@@ -1,53 +1,137 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Question } from 'components/Question';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 import { Button } from '@mui/material';
+
+import { Question } from 'components/Question';
 
 import './Questions.scss';
 
 const listVariants = {
-  visible: i => ({
-    y: 0,
-    transition: {
-      duration: 0.5
-    }
-  }),
+  visible: {
+    scale: 1,
+  },
   hidden: {
-    y: -1000,
+    scale: 0,
   }
 }
 
 export function Questions(props) {
-  const { questions, currentAnswer, setCurrentAnswer } = props;
+  const { questions, getNextQuestion, comeBackAnswer, sendQuestionToServer } = props;
+  const [showCommit, setShowCommit] = useState(false)
+  const [commit, setCommit] = useState('');
+  const [currentAnswer, setCurrentAnswer] = useState('');
+  const [prevAnswer, setPrevAnswer] = useState('');
+  const [log, setLog] = useState([]);
+
+  const handlerNext = () => {
+    if (currentAnswer && !currentAnswer.answer.next && commit.length === 0) {
+      setShowCommit(true);
+      setLog(prevState => {
+        return [...prevState, currentAnswer.story]
+      })
+    } else if (currentAnswer && currentAnswer.answer.next) {
+      getNextQuestion(currentAnswer.answer.next);
+      setLog(prevState => {
+        return [...prevState, currentAnswer.story]
+      })
+      setPrevAnswer(currentAnswer);
+      setCurrentAnswer('')
+    } else if (commit.length > 0) {
+      setLog(prevState => {
+        return [...prevState, { commit: commit }]
+      })
+    }
+  }
+
+  useEffect(() => {
+    const findCommit = log.find(item => item.commit)
+    if (findCommit){
+      console.log('here');
+      sendQuestionToServer(log);
+    }
+  }, [log])
+
+  const handlerBack = () => {
+    setLog(prevState => {
+      return prevState.slice(0, -1);
+    })
+    if (!showCommit) {
+      setCurrentAnswer(prevAnswer);
+      comeBackAnswer();
+    } else {
+      setShowCommit(false);
+      setCommit('');
+    }
+  }
+
   return (
-    <div className="questions">
+    <AnimateSharedLayout>
       {
-        questions.map((question, idx) =>
-          <motion.div
-            key={idx}
-            variants={listVariants}
-            initial='hidden'
-            animate='visible'
-            custom={idx}
-          >
-            <Question
-              question={question}
-              index={idx}
-              setCurrentAnswer={setCurrentAnswer}
-            />
-          </motion.div>
-        )
+      questions.length > 0 &&
+        <motion.div
+          className="questions"
+          layout
+        >
+          <AnimatePresence>
+            {
+              questions.map((question, idx) =>
+                <motion.div
+                  className='questions__disabled'
+                  key={idx}
+                  layout
+                  variants={listVariants}
+                  initial='hidden'
+                  animate='visible'
+                  exit={{ x: -1000 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Question
+                    question={question}
+                    index={idx}
+                    setCurrentAnswer={setCurrentAnswer}
+                  />
+                </motion.div>
+              )
+            }
+          </AnimatePresence>
+          <AnimatePresence>
+            {
+              showCommit &&
+              <motion.textarea
+                className='questions__area'
+                cols={30}
+                rows={5}
+                layout
+                variants={listVariants}
+                initial='hidden'
+                animate='visible'
+                exit={{ x: -1000 }}
+                transition={{ duration: 0.5 }}
+                value={commit}
+                onChange={event => setCommit(event.target.value)}
+              >
+
+              </motion.textarea>
+            }
+          </AnimatePresence>
+          <div className="questions__footer">
+            <Button
+              variant='contained'
+              disabled={questions.length <= 1 && !showCommit}
+              onClick={() => handlerBack()}
+            >
+              назад
+            </Button>
+            <Button
+              variant='contained'
+              disabled={!currentAnswer || (showCommit && commit.length === 0)}
+              onClick={() => handlerNext()}
+            >
+              далее
+            </Button>
+          </div>
+        </motion.div>
       }
-      <div className="questions__footer">
-        <Button
-          variant='contained'
-          disabled={ questions.length <= 1 }
-        >назад</Button>
-        <Button
-          variant='contained'
-          disabled={!currentAnswer}
-        >далее</Button>
-      </div>
-    </div>
+    </AnimateSharedLayout>
   )
 }

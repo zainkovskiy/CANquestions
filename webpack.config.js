@@ -14,6 +14,7 @@ module.exports = {
       components: path.resolve(__dirname, 'src', 'components')
     }
   },
+  devtool: 'eval-cheap-source-map',
   module: {
     rules: [
       {
