@@ -1,0 +1,19 @@
+.success {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  &__img{
+    height: 25%;
+  }
+  &__text{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.8px;
+    font-weight: 700; 
+    color: grey;
+    margin: 0;
+  }
+}

@@ -11,7 +11,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
     alias: {
-      components: path.resolve(__dirname, 'src', 'components')
+      components: path.resolve(__dirname, 'src', 'components'),
     }
   },
   devtool: 'eval-cheap-source-map',
@@ -33,7 +33,7 @@ module.exports = {
             loader: 'sass-loader'
           },
         ]
-      }
+      },
     ]
   },
   plugins: [

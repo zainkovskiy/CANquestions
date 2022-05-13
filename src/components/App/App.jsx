@@ -3,7 +3,10 @@ import axios from "axios";
 
 import { Linear } from 'components/Linear';
 import { Error } from 'components/Error';
+import { Success } from 'components/Success';
 import { Questions } from 'components/Questions';
+import { Header } from 'components/Header';
+import { Title } from 'components/Title';
 
 import './App.scss';
 
@@ -11,11 +14,14 @@ export class App extends Component {
   state = {
     loading: true,
     error: false,
+    success: false,
+    request: false,
     session: '',
     questions: [],
   }
 
   getNextQuestion = async (nextUID) => {
+    this.setState({request: true});
     try {
       const res = await axios.post('https://hs-01.centralnoe.ru/Project-Selket-Main/Servers/Questions/Controller.php', {
         sessionId: this.state.session,
@@ -31,10 +37,11 @@ export class App extends Component {
             answers: res.data.answers
           }]
         }))
+        this.setState({request: false});
       }
     } catch {
       this.setState({ error: true })
-    } 
+    }
   }
 
   comeBackAnswer = () => {
@@ -53,11 +60,12 @@ export class App extends Component {
       })
       if (res.statusText === 'OK') {
         this.setState({ session: res.data.sessionId })
-        this.setState({ questions: [{
-          question: res.data.question,
-          answers: res.data.answers
-        }]
-      })
+        this.setState({
+          questions: [{
+            question: res.data.question,
+            answers: res.data.answers
+          }]
+        })
       }
     } catch {
       this.setState({ error: true })
@@ -77,11 +85,13 @@ export class App extends Component {
         source: source,
         log: log
       })
+      if (res.statusText === 'OK') {
+        this.setState({ success: true });
+      }
     } catch {
       this.setState({ error: true })
     } finally {
       this.setState({ loading: false });
-      // window.location.replace("https://crm.centralnoe.ru/")
     }
   }
 
@@ -97,14 +107,25 @@ export class App extends Component {
             <Linear /> :
             <>
               {
-                this.state.error ?
-                  <Error url={'https://crm.centralnoe.ru/dealincom/assets/img/error.jpg'}/> :
-                  <Questions
-                    questions={this.state.questions}
-                    comeBackAnswer={this.comeBackAnswer}
-                    getNextQuestion={this.getNextQuestion}
-                    sendQuestionToServer={this.sendQuestionToServer}
-                  />
+                this.state.error || this.state.success ?
+                  <>
+                    {
+                      this.state.error ?
+                        <Error url={'https://crm.centralnoe.ru/dealincom/assets/img/error.jpg'} /> :
+                        <Success url={'https://crm.centralnoe.ru/dealincom/assets/img/success-icon.png'} />
+                    }
+                  </> :
+                  <>
+                    <Header />
+                    <Title />
+                    <Questions
+                      questions={this.state.questions}
+                      request={this.state.request}
+                      comeBackAnswer={this.comeBackAnswer}
+                      getNextQuestion={this.getNextQuestion}
+                      sendQuestionToServer={this.sendQuestionToServer}
+                    />
+                  </>
               }
             </>
         }

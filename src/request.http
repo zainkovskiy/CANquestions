@@ -1,0 +1,10 @@
+GET  https://hs-01.centralnoe.ru/Project-Selket-Main/Servers/Questions/Controller.php
+Content-Type: application/json; charset=utf-8
+
+{
+    "userId": 2921,
+    "action": "new",
+    "UID": 2,
+    "reqNumber": 55846000294
+}
+###

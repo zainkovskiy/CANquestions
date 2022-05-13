@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
-import { Button } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import { Question } from 'components/Question';
 
@@ -16,7 +16,7 @@ const listVariants = {
 }
 
 export function Questions(props) {
-  const { questions, getNextQuestion, comeBackAnswer, sendQuestionToServer } = props;
+  const { questions, getNextQuestion, comeBackAnswer, sendQuestionToServer, request } = props;
   const [showCommit, setShowCommit] = useState(false)
   const [commit, setCommit] = useState('');
   const [currentAnswer, setCurrentAnswer] = useState('');
@@ -46,7 +46,6 @@ export function Questions(props) {
   useEffect(() => {
     const findCommit = log.find(item => item.commit)
     if (findCommit){
-      console.log('here');
       sendQuestionToServer(log);
     }
   }, [log])
@@ -109,26 +108,29 @@ export function Questions(props) {
                 transition={{ duration: 0.5 }}
                 value={commit}
                 onChange={event => setCommit(event.target.value)}
+                placeholder='Введите комментарий'
               >
 
               </motion.textarea>
             }
           </AnimatePresence>
           <div className="questions__footer">
-            <Button
+            <LoadingButton
               variant='contained'
+              loading={request}
               disabled={questions.length <= 1 && !showCommit}
               onClick={() => handlerBack()}
             >
               назад
-            </Button>
-            <Button
+            </LoadingButton>
+            <LoadingButton
               variant='contained'
+              loading={request}
               disabled={!currentAnswer || (showCommit && commit.length === 0)}
               onClick={() => handlerNext()}
             >
               далее
-            </Button>
+            </LoadingButton>
           </div>
         </motion.div>
       }
