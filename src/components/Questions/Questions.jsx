@@ -38,7 +38,7 @@ export function Questions(props) {
       setCurrentAnswer('')
     } else if (commit.length > 0) {
       setLog(prevState => {
-        return [...prevState, { commit: commit }]
+        return [...prevState, { commit: commit.replace(/\n/g, ' ') }]
       })
     }
   }
