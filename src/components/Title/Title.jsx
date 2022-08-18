@@ -4,9 +4,9 @@ import { Button } from "@mui/material";
 import './Title.scss';
 
 export function Title() {
-  const handlerClick = () => {
-    window.location.replace(`https://crm.centralnoe.ru/attention/?reqNumber=${reqNumber}&dealId=${dealId}&source=${source}`)
-  }
+  // const handlerClick = () => {
+  //   window.location.replace(`https://crm.centralnoe.ru/attention/?reqNumber=${reqNumber}&dealId=${dealId}&source=${source}`)
+  // }
 
   const getTitle = () => {
     if (dealId) {
@@ -19,15 +19,13 @@ export function Title() {
   }
   return (<div className='title'>
     {getTitle()}
-    <Button
+    {/* <Button
       size='small'
-      variant='text'
+      variant='contained'
       onClick={handlerClick}
-      sx={{
-        color: '#fff'
-      }}
+      color='error'
     >
       Назад
-    </Button>
+    </Button> */}
   </div>)
 }

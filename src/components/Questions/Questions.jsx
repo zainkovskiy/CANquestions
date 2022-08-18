@@ -45,12 +45,17 @@ export function Questions(props) {
 
   useEffect(() => {
     const findCommit = log.find(item => item.commit)
-    if (findCommit){
+    if (findCommit) {
       sendQuestionToServer(log);
     }
   }, [log])
 
   const handlerBack = () => {
+    if (questions.length <= 1 && !showCommit) {
+      window.location.replace(`https://crm.centralnoe.ru/attention/?reqNumber=${reqNumber}&dealId=${dealId}&source=${source}`)
+      return
+    }
+
     setLog(prevState => {
       return prevState.slice(0, -1);
     })
@@ -66,7 +71,7 @@ export function Questions(props) {
   return (
     <AnimateSharedLayout>
       {
-      questions.length > 0 &&
+        questions.length > 0 &&
         <motion.div
           className="questions"
           layout
@@ -118,7 +123,7 @@ export function Questions(props) {
             <LoadingButton
               variant='contained'
               loading={request}
-              disabled={questions.length <= 1 && !showCommit}
+              // disabled={questions.length <= 1 && !showCommit}
               onClick={() => handlerBack()}
             >
               назад
