@@ -21,7 +21,7 @@ export class App extends Component {
   }
 
   getNextQuestion = async (nextUID) => {
-    this.setState({request: true});
+    this.setState({ request: true });
     try {
       const res = await axios.post('https://hs-01.centralnoe.ru/Project-Selket-Main/Servers/Questions/Controller.php', {
         sessionId: this.state.session,
@@ -37,7 +37,7 @@ export class App extends Component {
             answers: res.data.answers
           }]
         }))
-        this.setState({request: false});
+        this.setState({ request: false });
       }
     } catch {
       this.setState({ error: true })
